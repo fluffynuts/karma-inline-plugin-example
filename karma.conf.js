@@ -2,9 +2,13 @@
 // Generated on Tue Mar 21 2017 08:16:05 GMT+0200 (South Africa Standard Time)
 
 function manglePreProcessorFactory(config) {
+  config = config || {};
+  var 
+    mangleConfig = config.mangleConfig || {},
+    addProperties = mangleConfig.add || {};
   return (content, file, done) => {
     try {
-      var obj = JSON.parse(content);
+      var obj = Object.assign(JSON.parse(content), addProperties);
       obj.foo = "wibbles";
       done(JSON.stringify(obj));
     } catch (e) {
@@ -43,7 +47,11 @@ module.exports = function(config) {
       { "preprocessor:mangle": ["factory", manglePreProcessorFactory] }
     ],
 
-
+    mangleConfig: {
+      add: {
+        moo: "said the cow"
+      }
+    },
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
@@ -85,7 +93,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
